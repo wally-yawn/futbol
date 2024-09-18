@@ -149,28 +149,54 @@ class StatTracker
     # returns int
   end
 
-  def get_scores(team_id, hoa = :both)
+  def get_games(team_id, hoa)
+    no_games = [0] # only needed if there are no matching games
+    games = []
+
+    games = case hoa
+              when :home
+                @all_games.select do |game|
+                  game.home_team_id.to_i == team_id
+                end
+              when :away
+                @all_games.select do |game|
+                  game.away_team_id.to_i == team_id
+                end
+              end
+
+    return no_games unless games.any?
+    games
+  end
+
+  def get_games_for_season(team_id, season)
+    require 'pry';binding.pry
+  end
+
+  def get_scores(team_id, hoa = :both, season = :all)
     no_goals = [0] # only needed if there are no goals
     team_id = team_id.to_i # team_id can be provided as int or str
+    goals = []
 
-    away_games = @all_games.select { |game| game.away_team_id.to_i == team_id }
-    home_games = @all_games.select { |game| game.home_team_id.to_i == team_id }
+    case hoa
+      when :away
+        get_games(team_id, :away).each do |game|
+          goals << game.away_goals
+        end
+      when :home
+        get_games(team_id, :home).each do |game|
+          goals << game.home_goals
+        end
+      else # :both
+        get_games(team_id, :home).each do |game|
+          goals << game.home_goals
+        end
+        get_games(team_id, :away).each do |game|
+          goals << game.away_goals
+        end
+      end
 
-    return no_goals unless home_games.any? || away_games.any?
-
-    home_goals = []
-    home_games.each { |game| home_goals << game.home_goals.to_i } if home_games
-
-    away_goals = []
-    away_games.each { |game| away_goals << game.away_goals.to_i } if away_games
-
-    if hoa == :home
-      home_goals
-    elsif hoa == :away
-      away_goals
-    else
-      home_goals + away_goals
-    end
+    return no_goals unless goals.any?
+    goals
   end
 
   def highest_total_score
