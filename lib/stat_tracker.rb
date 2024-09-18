@@ -164,12 +164,14 @@ class StatTracker
                 end
               end
 
-    return no_games unless games.any?
+    return no_games unless games
     games
   end
 
-  def get_games_for_season(team_id, season)
-    require 'pry';binding.pry
+  def get_games_for_season(season, games = @all_games)
+    games.select do |game|
+      game.season == season
+    end
   end
 
   def get_scores(team_id, hoa = :both, season = :all)
