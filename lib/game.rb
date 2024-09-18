@@ -9,8 +9,8 @@ class Game
     @date_time = source[:date_time]
     @away_team_id = source[:away_team_id]
     @home_team_id = source[:home_team_id]
-    @away_goals = source[:away_goals]
-    @home_goals = source[:home_goals]
+    @away_goals = source[:away_goals].to_i
+    @home_goals = source[:home_goals].to_i
     @venue = source[:venue]
     @venue_link = source[:venue_link]
   end
