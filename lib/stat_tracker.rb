@@ -159,18 +159,7 @@ class StatTracker
     seasons
   end
 
-  def get_average(scores)
-    # TODO: helper method
-    # returns float
-  end
-
-  def get_sum(scores)
-    # TODO: helper method
-    # returns int
-  end
-
-
-  def get_games(team_id, hoa, season = :all)
+  def get_games(team_id, hoa, season = :all) # YAGNI?
     no_games = [0] # only needed if there are no matching games
     games = []
 
@@ -204,12 +193,10 @@ class StatTracker
     format('%.2f', avg)
   end
 
-  def get_scores(team_id, hoa = :both, season = :all)
+  def get_scores(team_id, hoa = :both, season = :all) # YAGNI?
     no_goals = [0] # only needed if there are no goals
     team_id = team_id.to_i # team_id can be provided as int or str
     goals = []
-
-
 
     case hoa
       when :away
