@@ -422,18 +422,30 @@ class StatTracker
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
   end
   
-  def best_season(team_id)#this is dry because i used command + c
-      seasons_games = {}
-      seasons_games[games] = 0
+  def get_best_season(team_id)#this is dry because i used command + c
+    #best_season = '' # will return this
+    seasons_games = {} # season: games
+
+    #create a key with value 0 for each season
+    get_seasons.each do |season|
+      seasons_games[season] = 0 # so we can +=
+      require 'pry';binding.pry
+    end
+
+      # how many games are there for this team_id
       @all_games.count do |game|
           if team_id.to_s == game.home_team_id
-          seasons_games[games] += 1
+            seasons_games[game.season] += 1 # increment the value in seasons_games['season']
           seasons_games[game.season] += 1 if game.home_goals > game.away_goals
           elsif team_id.to_s == game.away_team_id
-          seasons_games[games] += 1
+          seasons_games[game] += 1
           seasons_games[game.season] += 1 if game.away_goals > game.home_goals
             binding.pry
           end
         end
+
+      # get all games where team_id won, per season
+
+      # look at season_games and find the best season
   end
 end
