@@ -146,6 +146,45 @@ RSpec.describe StatTracker do
     end
   end
 
+  describe '#average_goals_by_season' do
+    it 'calculates average goals by season' do
+      avg = @stat_tracker1.average_goals_by_season
+      expect(avg['20122013']).to eq(3.75)
+    end
+  end
+
+  describe '#games_by_season' do
+    it 'returns a hash of games by season' do
+      expect(@stat_tracker1.count_of_games_by_season).to be_a(Hash)
+      games = @stat_tracker1.count_of_games_by_season
+      expect(games['20122013']).to eq 32
+      expect(games['20112012']).to eq 0
+    end
+  end
+
+  describe '#get_seasons' do
+    it 'returns an array of seasons for al games' do
+      expect(@stat_tracker1.get_seasons.first).to eq "20122013"
+      expect(@stat_tracker1.get_seasons.last).to eq "20122013"
+    end
+  end
+
+  describe '#total_games' do
+    it 'returns total games count' do
+      expect(@stat_tracker1.total_games).to eq 32
+    end
+  end
+
+  describe '#get_games' do
+    it 'returns an array of games for team_id' do
+      games = @stat_tracker1.get_games(6, :away)
+      expect(games.count).to eq 4
+      games = @stat_tracker1.get_games(6, :home)
+      expect(games.count).to eq 5
+
+    end
+  end
+
   describe '#count_of_all_goals' do
     it 'counts all goals' do
       expect(@stat_tracker1.count_of_all_goals).to eq(120)
