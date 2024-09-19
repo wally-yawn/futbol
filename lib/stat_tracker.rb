@@ -366,11 +366,11 @@ class StatTracker
       team.team_id == team_id.to_s
     end
     team_info = {
-      :team_id => team.team_id,
-      :franchiseid => team.franchise_id,
-      :team_name => team.teamName,
-      :abbreviation => team.abbreviation,
-      :link => team.link
+      'team_id' => team.team_id,
+      'franchise_id' => team.franchise_id,
+      'team_name' => team.teamName,
+      'abbreviation' => team.abbreviation,
+      'link' => team.link
     }
   end
   
