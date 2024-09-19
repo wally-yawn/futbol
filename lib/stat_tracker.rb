@@ -130,13 +130,33 @@ class StatTracker
   average.round(2)
   end
 
-  def average_goals_season
-    # TODO: required
-    # Average number of goals scored in a game organized
-    # in a hash with season names (e.g. 20122013) as keys
-    # and a float representing the average number of goals
-    # in a game for that season as values (rounded to the nearest 100th)
-    # returns hash
+  def average_goals_by_season
+    seasons = get_seasons
+
+    season_games = {} # season: games
+    seasons.each do |season|
+      season_games[season] = games_by_season(season)
+    end
+
+    season_avg = {} # season: avg
+    season_games.each do |season, games|
+      season_avg[season] = get_avg_goals(games)
+    end
+    season_avg
+  end
+
+  def games_by_season(season)
+    games = @all_games.select do |game|
+              game.season == season
+            end
+  end
+
+  def get_seasons
+    seasons = []
+    @all_games.each do |game|
+      seasons << game.season unless seasons.include?(game.season)
+    end
+    seasons
   end
 
   def get_average(scores)
@@ -149,7 +169,8 @@ class StatTracker
     # returns int
   end
 
-  def get_games(team_id, hoa)
+
+  def get_games(team_id, hoa, season = :all)
     no_games = [0] # only needed if there are no matching games
     games = []
 
@@ -174,10 +195,21 @@ class StatTracker
     end
   end
 
+  def get_avg_goals(games)
+    goals = 0
+    games.each do |game|
+      goals += game.away_goals + game.home_goals
+    end
+    avg = goals.to_f / games.count
+    format('%.2f', avg)
+  end
+
   def get_scores(team_id, hoa = :both, season = :all)
     no_goals = [0] # only needed if there are no goals
     team_id = team_id.to_i # team_id can be provided as int or str
     goals = []
+
+
 
     case hoa
       when :away
