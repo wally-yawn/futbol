@@ -57,7 +57,7 @@ class StatTracker
   def percentage_visitor_wins
     visitor_wins = @all_games.count {|game| game.away_goals > game.home_goals}
 
-    percentage = (visitor_wins.to_f / total_games) 
+    percentage = (visitor_wins.to_f / total_games)
     percentage.round(2)
   end
 
@@ -127,47 +127,96 @@ class StatTracker
     average.round(2)
   end
 
-  def average_goals_season
-    # TODO: required
-    # Average number of goals scored in a game organized
-    # in a hash with season names (e.g. 20122013) as keys
-    # and a float representing the average number of goals
-    # in a game for that season as values (rounded to the nearest 100th)
-    # returns hash
+  def average_goals_by_season
+    seasons = get_seasons
+    season_games = {}
+
+    seasons.each do |season|
+      season_games[season] = games_by_season(season)
+    end
+
+    season_avg = {}
+
+    season_games.each do |season, games|
+      season_avg[season] = get_avg_goals(games)
+    end
+    season_avg
   end
 
-  def get_average(scores)
-    # TODO: helper method
-    # returns float
+  def games_by_season(season)
+    games = @all_games.select do |game|
+              game.season == season
+            end
+    games
   end
 
-  def get_sum(scores)
-    # TODO: helper method
-    # returns int
+  def get_seasons
+    seasons = []
+    @all_games.each do |game|
+      seasons << game.season unless seasons.include?(game.season)
+    end
+    seasons
   end
 
-  def get_scores(team_id, hoa = :both)
+  def get_games(team_id, hoa)
+    no_games = [0] # only needed if there are no matching games
+    games = []
+
+    games = case hoa
+              when :home
+                @all_games.select do |game|
+                  game.home_team_id.to_i == team_id
+                end
+              when :away
+                @all_games.select do |game|
+                  game.away_team_id.to_i == team_id
+                end
+              end
+
+    return no_games unless games
+    games
+  end
+
+  def get_games_for_season(season, games = @all_games)
+    games.select do |game|
+      game.season == season
+    end
+  end
+
+  def get_avg_goals(games)
+    goals = 0
+    games.each do |game|
+      goals += game.away_goals + game.home_goals
+    end
+    avg = goals.to_f / games.count
+    avg.round(2)
+  end
+
+  def get_scores(team_id, hoa = :both, season = :all)
     no_goals = [0] # only needed if there are no goals
     team_id = team_id.to_i # team_id can be provided as int or str
+    goals = []
 
-    away_games = @all_games.select { |game| game.away_team_id.to_i == team_id }
-    home_games = @all_games.select { |game| game.home_team_id.to_i == team_id }
+    case hoa
+      when :away
+        get_games(team_id, :away).each do |game|
+          goals << game.away_goals
+        end
+      when :home
+        get_games(team_id, :home).each do |game|
+          goals << game.home_goals
+        end
+      else # :both
+        get_games(team_id, :home).each do |game|
+          goals << game.home_goals
+        end
+        get_games(team_id, :away).each do |game|
+          goals << game.away_goals
+        end
+      end
 
-    return no_goals unless home_games.any? || away_games.any?
-
-    home_goals = []
-    home_games.each { |game| home_goals << game.home_goals.to_i } if home_games
-
-    away_goals = []
-    away_games.each { |game| away_goals << game.away_goals.to_i } if away_games
-
-    if hoa == :home
-      home_goals
-    elsif hoa == :away
-      away_goals
-    else
-      home_goals + away_goals
-    end
+    return no_goals unless goals.any?
+    goals
   end
 
   def highest_total_score
@@ -328,7 +377,7 @@ class StatTracker
   def average_win_percentage(team_id)
     wins = 0
     games = 0
-    @all_games.count do |game| 
+    @all_games.count do |game|
       if team_id.to_s == game.home_team_id
           games += 1
           season_wins 1 if game.home_goals > game.away_goals
