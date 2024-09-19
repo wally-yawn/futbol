@@ -175,6 +175,16 @@ RSpec.describe StatTracker do
     end
   end
 
+  describe '#get_games' do
+    it 'returns an array of games for team_id' do
+      games = @stat_tracker1.get_games(6, :away)
+      expect(games.count).to eq 4
+      games = @stat_tracker1.get_games(6, :home)
+      expect(games.count).to eq 5
+
+    end
+  end
+
   describe '#count_of_all_goals' do
     it 'counts all goals' do
       expect(@stat_tracker1.count_of_all_goals).to eq(120)

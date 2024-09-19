@@ -158,7 +158,7 @@ class StatTracker
     seasons
   end
 
-  def get_games(team_id, hoa, season = :all)
+  def get_games(team_id, hoa)
     no_games = [0] # only needed if there are no matching games
     games = []
 
