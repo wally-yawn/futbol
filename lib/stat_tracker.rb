@@ -378,12 +378,12 @@ class StatTracker
     wins = 0
     games = 0
     @all_games.count do |game|
-      if team_id.to_s == game.home_team_id
+        if team_id.to_s == game.home_team_id
           games += 1
-          season_wins 1 if game.home_goals > game.away_goals
+          wins += 1 if game.home_goals > game.away_goals
         elsif team_id.to_s == game.away_team_id
           games += 1
-          season_wins 1 if game.away_goals > game.home_goals
+          wins += 1 if game.away_goals > game.home_goals
         end
       end
     wins > 0 ? ((wins.to_f / games)).to_f.round(2) : 0
@@ -422,15 +422,18 @@ class StatTracker
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
   end
   
-  def best_season(team_id)
-    season_wins =[]
-    @all_games.each do |game| 
-      if team_id.to_s == game.home_team_id
-          season_wins << game if game.home_goals > game.away_goals
-        elsif team_id.to_s == game.away_team_id
-          season_wins << if game.away_goals > game.home_goals
+  def best_season(team_id)#this is dry because i used command + c
+      seasons_games = {}
+      seasons_games[games] = 0
+      @all_games.count do |game|
+          if team_id.to_s == game.home_team_id
+          seasons_games[games] += 1
+          seasons_games[game.season] += 1 if game.home_goals > game.away_goals
+          elsif team_id.to_s == game.away_team_id
+          seasons_games[games] += 1
+          seasons_games[game.season] += 1 if game.away_goals > game.home_goals
+            binding.pry
+          end
         end
-      end
-
   end
 end
