@@ -40,7 +40,7 @@ class StatTracker
 
   def percentage_home_wins
     home_wins = @all_games.count {|game| game.home_goals > game.away_goals}
-          
+
     percentage = (home_wins.to_f / total_games)
     percentage.round(2)
   end
@@ -56,14 +56,14 @@ class StatTracker
 
   def percentage_visitor_wins
     visitor_wins = @all_games.count {|game| game.away_goals > game.home_goals}
-          
+
     percentage = (visitor_wins.to_f / total_games) 
     percentage.round(2)
   end
 
   def percentage_ties
     ties = @all_games.count {|game| game.away_goals == game.home_goals}
-          
+
     percentage = (ties.to_f / total_games)
     percentage.round(2)
   end
@@ -98,27 +98,27 @@ class StatTracker
   def worst_offense
     team_goals = {}
     team_games = {}
-  
+
     @all_game_teams.each do |game_team|
       team_id = game_team.team_id
       goals = game_team.goals.to_i
-  
+
       team_goals[team_id] ||= 0
       team_goals[team_id] += goals
-  
+
       team_games[team_id] ||= 0
       team_games[team_id] += 1
       end
-  
+
       team_averages = team_goals.map do |team_id, total_goals|
         games_played = team_games[team_id]
         average_goals = total_goals.to_f / games_played
         [team_id, average_goals]
       end
-  
+
       worst_team_id = team_averages.min_by { |_,avg| avg }.first
       worst_team = @all_teams.find {|team| team.team_id == worst_team_id}
-  
+
       worst_team.teamName
   end
 
@@ -217,7 +217,7 @@ class StatTracker
     goals
   end
 
-  
+
 
   def highest_total_score
     scores = @all_games.map do |game|
@@ -304,5 +304,34 @@ class StatTracker
       count_of_games_by_season[season] += 1
     end
     count_of_games_by_season
+  end
+
+  def team_shot_goal_ratios(season = nil)
+    team_ratios = Hash.new { |hash, key| hash[key] = { goals: 0, shots: 0 } }
+
+    @all_game_teams.each do |game_team|
+      game = @all_games.find { |g| g.game_id == game_team.game_id }
+      next if season && game.season != season.to_s
+      team_id = game_team.team_id
+      team_ratios[team_id][:goals] += game_team.goals.to_i
+      team_ratios[team_id][:shots] += game_team.shots.to_i
+    end
+
+    @all_teams.each_with_object({}) do |team, result|
+      team_id = team.team_id
+      goals = team_ratios[team_id][:goals]
+      shots = team_ratios[team_id][:shots]
+      result[team.teamName] = shots > 0 ? (goals.to_f / shots).round(2) : 0
+    end
+  end
+
+  def most_accurate_team(season = nil)
+    team_ratios = team_shot_goal_ratios(season)
+    team_shot_goal_ratios.max_by {|team_name, ratio| ratio }.first
+  end
+
+  def least_accurate_team(season = nil)
+    team_ratios = team_shot_goal_ratios(season)
+    team_shot_goal_ratios.min_by {|team_name, ratio| ratio }.first
   end
 end
