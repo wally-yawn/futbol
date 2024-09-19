@@ -331,10 +331,10 @@ class StatTracker
     @all_games.count do |game| 
       if team_id.to_s == game.home_team_id
           games += 1
-          wins += 1 if game.home_goals > game.away_goals
+          season_wins 1 if game.home_goals > game.away_goals
         elsif team_id.to_s == game.away_team_id
           games += 1
-          wins += 1 if game.away_goals > game.home_goals
+          season_wins 1 if game.away_goals > game.home_goals
         end
       end
     wins > 0 ? ((wins.to_f / games)).to_f.round(2) : 0
@@ -364,7 +364,6 @@ class StatTracker
     worst_loss_margin = []
 
     @all_games.each do |game|
-      # binding.pry
       if team_id.to_s == game.home_team_id && game.home_goals < game.away_goals
         worst_loss_margin << game.away_goals - game.home_goals
       elsif team_id.to_s == game.away_team_id && game.away_goals < game.home_goals
@@ -372,6 +371,17 @@ class StatTracker
       end
     end
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
+  end
+  
+  def best_season(team_id)
+    season_wins =[]
+    @all_games.each do |game| 
+      if team_id.to_s == game.home_team_id
+          season_wins << game if game.home_goals > game.away_goals
+        elsif team_id.to_s == game.away_team_id
+          season_wins << if game.away_goals > game.home_goals
+        end
+      end
 
   end
 end
