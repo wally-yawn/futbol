@@ -359,4 +359,16 @@ RSpec.describe StatTracker do
       expect(@stat_tracker1.worst_loss(6)).to_not eq(nil)
     end
   end
-end
+
+  describe '#favorite_opponent' do
+    it 'can determine a team\'s favorite opponent' do
+      expect(true).to eq(false)
+    end
+  end
+  
+  describe '#rival' do
+    it 'can determine a team\'s rival' do
+      expect(true).to eq(false)
+    end
+  end
+end 

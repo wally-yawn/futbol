@@ -421,6 +421,11 @@ class StatTracker
       end
     end
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
+  end
 
+  def favorite_opponent
+  end
+
+  def rival
   end
 end
