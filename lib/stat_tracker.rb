@@ -219,8 +219,6 @@ class StatTracker
     goals
   end
 
-
-
   def highest_total_score
     scores = @all_games.map do |game|
       game.home_goals + game.away_goals
@@ -274,7 +272,6 @@ class StatTracker
     end
     all_home_scores.min_by{|team,goals| goals}.first.teamName
   end
-
 
   def coach_win_percentages(season)
     coach_games = Hash.new { |hash, key| hash[key] = { wins: 0, games: 0}}
@@ -336,4 +333,60 @@ class StatTracker
     team_ratios = team_shot_goal_ratios(season)
     team_shot_goal_ratios.min_by {|team_name, ratio| ratio }.first
   end
+
+  def team_tackle_total(season = nil)
+    team_tackles = Hash.new(0)
+
+    @all_game_teams.each do |game_team|
+      game = @all_games.find { |g| g.game_id == game_team.game_id }
+      next if season && game.season != season.to_s
+
+      team_tackles[game_team.team_id] += game_team.tackles.to_i
+    end
+      @all_teams.each_with_object({}) do |team, result|
+        team_id = team.team_id
+        result[team.teamName] = team_tackles[team_id]
+      end
+  end
+
+  def count_of_teams
+    @all_teams.length
+  end
+
+  def most_tackles(season = nil)
+    team_tackle_total(season).max_by { |team_name, tackles| tackles}.first
+  end
+
+  def fewest_tackles(season = nil)
+    team_tackle_total(season).min_by { |team_name, tackles| tackles}.first
+  end
+
+  def team_info(team_id)
+    team = all_teams.find do |team|
+      team.team_id == team_id.to_s
+    end
+    team_info = {
+      :team_id => team.team_id,
+      :franchiseid => team.franchise_id,
+      :team_name => team.teamName,
+      :abbreviation => team.abbreviation,
+      :link => team.link
+    }
+  end
+  
+  def average_win_percentage(team_id)
+    wins = 0
+    games = 0
+    @all_games.count do |game| 
+      if team_id.to_s == game.home_team_id
+          games += 1
+          wins += 1 if game.home_goals > game.away_goals
+        elsif team_id.to_s == game.away_team_id
+          games += 1
+          wins += 1 if game.away_goals > game.home_goals
+        end
+      end
+    wins > 0 ? ((wins.to_f / games)).to_f.round(2) : 0
+  end
+
 end
