@@ -340,4 +340,17 @@ class StatTracker
     wins > 0 ? ((wins.to_f / games)).to_f.round(2) : 0
   end
 
+  def worst_loss(team_id) 
+    worst_loss_margin = []
+
+    @all_games.each do |game|
+      # binding.pry
+      if team_id.to_s == game.home_team_id && game.home_goals < game.away_goals
+        worst_loss_margin << game.away_goals - game.home_goals
+      elsif team_id.to_s == game.away_team_id && game.away_goals < game.home_goals
+        worst_loss_margin << game.home_goals - game.away_goals
+      end
+    end
+    worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
+  end
 end
