@@ -312,7 +312,7 @@ RSpec.describe StatTracker do
     it 'can generate a hash of team info' do
       expected = {
         'team_id' => '9',
-        'franchiseid' => '30',
+        'franchise_id' => '30',
         'team_name' => 'New York City FC',
         'abbreviation' => 'NYC',
         'link' => '/api/v1/teams/9'
