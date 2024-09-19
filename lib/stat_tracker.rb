@@ -340,6 +340,25 @@ class StatTracker
     wins > 0 ? ((wins.to_f / games)).to_f.round(2) : 0
   end
 
+  def most_goals_scored(team_id)
+    most_goals = 0
+    all_game_teams.each do |game_team|
+      if game_team.team_id == team_id.to_s && game_team.goals > most_goals
+        most_goals = game_team.goals
+      end
+    end
+    most_goals
+  end
+
+  def fewest_goals_scored(team_id)
+    fewest_goals = Float::INFINITY
+    all_game_teams.each do |game_team|
+      if game_team.team_id == team_id.to_s && game_team.goals < fewest_goals
+        fewest_goals = game_team.goals
+      end
+    end
+    fewest_goals
+
   def worst_loss(team_id) 
     worst_loss_margin = []
 
@@ -352,5 +371,6 @@ class StatTracker
       end
     end
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
+
   end
 end
