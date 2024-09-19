@@ -15,7 +15,7 @@ RSpec.describe 'teams_factory' do
   describe '#create_teams' do
     it 'can create an array of teams from a csv' do
       expect(@team_factory1.teams).to eq([])
-      @team_factory1.create_teams('./data/teams.csv')
+      @team_factory1.create_teams('./data/teams_test_2.csv')
       expect(@team_factory1.teams.length).to eq(32)
       expect(@team_factory1.teams[0]).to be_an_instance_of(Team)
       expect(@team_factory1.teams[0].team_id).to eq('1')
