@@ -169,6 +169,12 @@ RSpec.describe StatTracker do
     end
   end
 
+  describe '#total_games' do
+    it 'returns total games count' do
+      expect(@stat_tracker1.total_games).to eq 32
+    end
+  end
+
   describe '#count_of_all_goals' do
     it 'counts all goals' do
       expect(@stat_tracker1.count_of_all_goals).to eq(120)
