@@ -358,7 +358,8 @@ class StatTracker
       end
     end
     fewest_goals
-
+  end
+  
   def worst_loss(team_id) 
     worst_loss_margin = []
 
