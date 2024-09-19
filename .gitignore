@@ -1,3 +1,4 @@
 Gemfile.lock
 coverage/
 runner.rb
+data/games_test.csv
