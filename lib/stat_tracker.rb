@@ -147,6 +147,7 @@ class StatTracker
     games = @all_games.select do |game|
               game.season == season
             end
+    games
   end
 
   def get_seasons
