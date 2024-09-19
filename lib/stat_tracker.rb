@@ -129,13 +129,14 @@ class StatTracker
 
   def average_goals_by_season
     seasons = get_seasons
+    season_games = {}
 
-    season_games = {} # season: games
     seasons.each do |season|
       season_games[season] = games_by_season(season)
     end
 
-    season_avg = {} # season: avg
+    season_avg = {}
+
     season_games.each do |season, games|
       season_avg[season] = get_avg_goals(games)
     end
@@ -156,7 +157,7 @@ class StatTracker
     seasons
   end
 
-  def get_games(team_id, hoa, season = :all) # YAGNI?
+  def get_games(team_id, hoa, season = :all)
     no_games = [0] # only needed if there are no matching games
     games = []
 
@@ -187,10 +188,10 @@ class StatTracker
       goals += game.away_goals + game.home_goals
     end
     avg = goals.to_f / games.count
-    format('%.2f', avg)
+    avg.round(2)
   end
 
-  def get_scores(team_id, hoa = :both, season = :all) # YAGNI?
+  def get_scores(team_id, hoa = :both, season = :all)
     no_goals = [0] # only needed if there are no goals
     team_id = team_id.to_i # team_id can be provided as int or str
     goals = []
