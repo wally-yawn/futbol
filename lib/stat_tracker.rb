@@ -57,7 +57,7 @@ class StatTracker
   def percentage_visitor_wins
     visitor_wins = @all_games.count {|game| game.away_goals > game.home_goals}
 
-    percentage = (visitor_wins.to_f / total_games) 
+    percentage = (visitor_wins.to_f / total_games)
     percentage.round(2)
   end
 
@@ -377,7 +377,7 @@ class StatTracker
   def average_win_percentage(team_id)
     wins = 0
     games = 0
-    @all_games.count do |game| 
+    @all_games.count do |game|
       if team_id.to_s == game.home_team_id
           games += 1
           wins += 1 if game.home_goals > game.away_goals
@@ -389,7 +389,7 @@ class StatTracker
     wins > 0 ? ((wins.to_f / games)).to_f.round(2) : 0
   end
 
-  def worst_loss(team_id) 
+  def worst_loss(team_id)
     worst_loss_margin = []
 
     @all_games.each do |game|
