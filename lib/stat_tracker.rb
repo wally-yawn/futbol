@@ -171,12 +171,6 @@ class StatTracker
     games
   end
 
-  def get_games_for_season(season, games = @all_games)
-    games.select do |game|
-      game.season == season
-    end
-  end
-
   def get_avg_goals(games)
     goals = 0
     games.each do |game|
