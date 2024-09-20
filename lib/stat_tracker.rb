@@ -462,6 +462,77 @@ class StatTracker
       diff = (game.home_goals - game.away_goals).abs
       biggest_blowout = diff if diff > biggest_blowout
     end
-    biggest_blowout
+    biggest_blowout  
+  end
+
+  
+    def head_to_head(team_id)
+    home_team_games = get_games(team_id.to_i, :home)
+    away_team_games = get_games(team_id.to_i, :away)
+    opponents = []
+    head_to_head_hash = {}
+
+    home_team_games.each do |game|
+      if !opponents.include?(game.away_team_id)
+        opponents << game.away_team_id
+      end
+    end
+ 
+    away_team_games.each do |game|
+      if !opponents.include?(game.home_team_id)
+        opponents << game.home_team_id
+      end
+    end
+
+    opponents.each do |opponent|
+      wins = 0
+      losses = 0
+      games = 0
+      home_team_games.each do |game|
+        if game.away_team_id.to_s == opponent.to_s
+          games += 1
+          if game.home_goals  > game.away_goals
+            wins += 1
+          elsif game.home_goals < game.away_goals
+            losses += 1
+          end
+        end
+      end
+      away_team_games.each do |game|
+        if game.home_team_id.to_s == opponent.to_s
+          games += 1
+          if game.home_goals  > game.away_goals
+            losses += 1
+          elsif game.home_goals < game.away_goals
+            wins += 1
+          end
+        end
+      end
+
+      team_name = all_teams.find do |team|
+        opponent == team.team_id.to_s
+      end.teamName
+      win_percentage = wins.to_f / games.to_f
+      head_to_head_hash[team_name] = win_percentage
+    end
+    head_to_head_hash
+  end
+
+  def favorite_opponent(team_id)
+    head_to_head_percentages = head_to_head(team_id)
+    if head_to_head_percentages.length > 0
+      head_to_head_percentages.max_by {|opponent, win_percentage| win_percentage}[0]
+    else
+      "No favorite"
+    end
+  end
+
+  def rival(team_id)
+    head_to_head_percentages = head_to_head(team_id)
+    if head_to_head_percentages.length > 0
+      head_to_head_percentages.min_by {|opponent, win_percentage| win_percentage}[0]
+    else
+      "No rival"
+    end
   end
 end

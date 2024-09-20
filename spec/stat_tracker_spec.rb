@@ -7,6 +7,7 @@ RSpec.describe StatTracker do
     team_path_2 = './data/teams_test.csv'
     game_teams_path = './data/game_team_test.csv'
     game_path_2 = './data/games_test_2.csv'
+    game_path_3 = './data/games_test_3.csv'
 
     locations = {
       games: game_path,
@@ -19,9 +20,16 @@ RSpec.describe StatTracker do
       teams: team_path_2,
       game_teams: game_teams_path
     }
+
+    locations3 = {
+      games: game_path_3,
+      teams: team_path_2,
+      game_teams: game_teams_path
+    }
     @stat_tracker = StatTracker.new
     @stat_tracker1 = StatTracker.from_csv(locations)
     @stat_tracker2 = StatTracker.from_csv(locations2)
+    @stat_tracker3 = StatTracker.from_csv(locations3)
   end
 
   describe '#initialize' do
@@ -384,4 +392,29 @@ RSpec.describe StatTracker do
     expect(@stat_tracker1.biggest_team_blowout(3)).to eq 2
     end
   end
-end
+
+  describe '#favorite_opponent' do
+    it 'can determine a team\'s favorite opponent' do
+      expect(@stat_tracker3.favorite_opponent(5)).to eq('Houston Dynamo')
+      expect(@stat_tracker3.favorite_opponent('5')).to eq('Houston Dynamo')
+      expect(@stat_tracker3.favorite_opponent(53)).to eq('No favorite')
+      expect(@stat_tracker3.favorite_opponent('53')).to eq('No favorite')
+    end
+  end
+
+  describe '#rival' do
+    it 'can determine a team\'s rival' do
+      expect(@stat_tracker3.rival(5)).to eq('FC Dallas')
+      expect(@stat_tracker3.rival('5')).to eq('FC Dallas')
+      expect(@stat_tracker3.rival(53)).to eq('No rival')
+      expect(@stat_tracker3.rival('53')).to eq('No rival')
+    end
+  end
+
+  describe '#head_to_head' do
+    it 'can return a hash of opponents and win percentages' do
+      expect(@stat_tracker3.head_to_head(5)).to eq({"FC Dallas"=>0.25, "Houston Dynamo"=>1.0})
+      expect(@stat_tracker3.head_to_head('5')).to eq({"FC Dallas"=>0.25, "Houston Dynamo"=>1.0})
+    end
+  end
+end 
