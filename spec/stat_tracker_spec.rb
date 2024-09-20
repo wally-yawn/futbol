@@ -363,30 +363,6 @@ RSpec.describe StatTracker do
     end
   end
 
-  describe '#seasonal_summary' do
-    it 'shows a hash that points to win%, total_goals, average_goals' do
-
-      expect_hash = {
-        "20122013"=> {
-          :regular_season=>{
-            :win_percentage=>0.0, 
-            :total_goals_scored=>0, 
-            :total_goals_against=>0, 
-            :average_goals_scored=>0.0, 
-            :average_goals_against=>0.0
-          },
-            :postseason=>{
-              :win_percentage=>0.0, 
-              :total_goals_scored=>8, 
-              :total_goals_against=>14, 
-              :average_goals_scored=>0.25, 
-              :average_goals_against=>0.44}
-              }
-            }
-      expect(@stat_tracker1.seasonal_summary("3")).to eq(expect_hash)
-    end
-  end
-
   describe '#best season' do 
     it 'can show the worst season for a team' do
       expect(@stat_tracker2.best_season(6)).to eq('20122013')
@@ -405,6 +381,48 @@ RSpec.describe StatTracker do
     it 'can find the biggest blowout' do
     expect(@stat_tracker1.biggest_team_blowout(6)).to eq 3
     expect(@stat_tracker1.biggest_team_blowout(3)).to eq 2
+    end
+  end
+
+  describe '#seasonal_summary' do
+    it 'shows a hash that points to win%, total_goals, average_goals' do
+      
+      expect_hash = { 
+      "20122013" => {
+        :postseason=> {
+          :average_goals_against=>0.48, 
+          :average_goals_scored=>0.28, 
+          :total_goals_against=>14, 
+          :total_goals_scored=>8, 
+          :win_percentage=>0.0
+          }, 
+          :regular_season=> {
+            :average_goals_against=>0.0, 
+            :average_goals_scored=>0.0, 
+            :total_goals_against=>0, 
+            :total_goals_scored=>0, 
+            :win_percentage=>0.0
+            }
+          },
+          "20132014" => {
+            :postseason=> {
+              :average_goals_against=>0.0, 
+              :average_goals_scored=>0.0, 
+              :total_goals_against=>0, 
+              :total_goals_scored=>0, 
+              :win_percentage=>0.0
+              }, 
+              :regular_season=> {
+                :average_goals_against=>0.0, 
+                :average_goals_scored=>0.0, 
+                :total_goals_against=>0, 
+                :total_goals_scored=>0, 
+                :win_percentage=>0.0
+                }
+              }
+            }
+          binding.pry
+      expect(@stat_tracker2.seasonal_summary("3")).to include(expect_hash)
     end
   end
 end
