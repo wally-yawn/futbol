@@ -417,4 +417,45 @@ RSpec.describe StatTracker do
       expect(@stat_tracker3.head_to_head('5')).to eq({"FC Dallas"=>0.25, "Houston Dynamo"=>1.0})
     end
   end
+
+  describe '#seasonal_summary' do
+    it 'shows a hash that points to win%, total_goals, average_goals' do
+      
+      expect_hash = { 
+      "20122013" => {
+        :postseason=> {
+          :average_goals_against=>0.48, 
+          :average_goals_scored=>0.28, 
+          :total_goals_against=>14, 
+          :total_goals_scored=>8, 
+          :win_percentage=>0.0
+          }, 
+          :regular_season=> {
+            :average_goals_against=>0.0, 
+            :average_goals_scored=>0.0, 
+            :total_goals_against=>0, 
+            :total_goals_scored=>0, 
+            :win_percentage=>0.0
+            }
+          },
+          "20132014" => {
+            :postseason=> {
+              :average_goals_against=>0.0, 
+              :average_goals_scored=>0.0, 
+              :total_goals_against=>0, 
+              :total_goals_scored=>0, 
+              :win_percentage=>0.0
+              }, 
+              :regular_season=> {
+                :average_goals_against=>0.0, 
+                :average_goals_scored=>0.0, 
+                :total_goals_against=>0, 
+                :total_goals_scored=>0, 
+                :win_percentage=>0.0
+                }
+              }
+            }
+      expect(@stat_tracker2.seasonal_summary("3")).to include(expect_hash)
+    end
+  end
 end 

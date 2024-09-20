@@ -528,4 +528,48 @@ class StatTracker
       "No rival"
     end
   end
+
+  def seasonal_summary(team_id)
+    seasons = {}
+
+    @all_games.each do |game|
+      season = game.season
+      type = game.type == "Postseason" ? :postseason : :regular_season
+
+      seasons[season] ||= {
+        regular_season: { win_percentage: 0.0, total_goals_scored: 0, total_goals_against: 0, average_goals_scored: 0.0, average_goals_against: 0.0, games_played: 0, wins: 0  },
+        postseason: { win_percentage: 0.0, total_goals_scored: 0, total_goals_against: 0, average_goals_scored: 0.0, average_goals_against: 0.0, games_played: 0, wins: 0  }
+        }
+        current_season = seasons[season][type]
+        current_season[:games_played] += 1
+
+        if game.home_team_id.to_s == team_id.to_s
+          current_season[:total_goals_scored] += game.home_goals.to_i
+          current_season[:total_goals_against] += game.away_goals.to_i
+          current_season[:wins] += 1 if game.home_goals.to_i > game.away_goals.to_i
+        elsif game.away_team_id.to_s == team_id.to_s
+          current_season[:total_goals_scored] += game.away_goals.to_i
+          current_season[:total_goals_against] += game.home_goals.to_i
+          current_season[:wins] += 1 if game.away_goals.to_i > game.home_goals.to_i
+        end
+    end
+    
+    seasons.each do |season, types|
+     types.each do |type, stats|
+        total_games = stats[:games_played]
+        if total_games > 0
+          stats[:win_percentage] = (stats[:wins].to_f / total_games).round(2)
+          stats[:average_goals_scored] = (stats[:total_goals_scored].to_f / total_games).round(2)
+          stats[:average_goals_against] = (stats[:total_goals_against].to_f / total_games).round(2)
+        else
+          stats[:win_percentage] = 0.0
+          stats[:average_goals_scored] = 0.0
+          stats[:average_goals_against] = 0.0
+        end
+        stats.delete(:games_played)
+        stats.delete(:wins)
+      end
+    end
+    seasons
+  end
 end
