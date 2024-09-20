@@ -455,7 +455,6 @@ RSpec.describe StatTracker do
                 }
               }
             }
-          binding.pry
       expect(@stat_tracker2.seasonal_summary("3")).to include(expect_hash)
     end
   end
