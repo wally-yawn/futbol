@@ -224,35 +224,28 @@ class StatTracker
     @all_games.length
   end
 
+  def scoring_averages(hoa, high_or_low)
+    @all_teams.send(high_or_low) do |team|
+      scores = get_scores(team.team_id, hoa).sum
+      away_games_count = get_games(team.team_id.to_i, hoa).count
+      scores.to_f / away_games_count.to_f
+    end.teamName
+  end
+
   def highest_scoring_visitor
-    @all_teams.max_by { |team| get_scores(team.team_id, :away).sum }.teamName
+    scoring_averages(:away, :max_by)
   end
 
   def highest_scoring_home_team
-    all_home_scores = {}
-    @all_teams.each do |team|
-      goals = get_scores(team.team_id, :home).sum
-      all_home_scores[team] = goals
-    end
-    all_home_scores.max_by{|team,goals| goals}.first.teamName
+    scoring_averages(:home, :max_by)
   end
 
   def lowest_scoring_visitor
-    all_visitor_scores = {}
-    @all_teams.each do |team|
-      goals = get_scores(team.team_id, :away).sum
-      all_visitor_scores[team] = goals
-    end
-    all_visitor_scores.min_by{|team,goals| goals}.first.teamName
+    scoring_averages(:away, :min_by)
   end
 
   def lowest_scoring_home_team
-    all_home_scores = {}
-    @all_teams.each do |team|
-      goals = get_scores(team.team_id, :home).sum
-      all_home_scores[team] = goals
-    end
-    all_home_scores.min_by{|team,goals| goals}.first.teamName
+    scoring_averages(:home, :min_by)
   end
 
   def coach_win_percentages(season)
