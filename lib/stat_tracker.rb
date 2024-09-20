@@ -423,53 +423,53 @@ class StatTracker
   end
   
   def get_best_season(team_id)
-    seasons_wins = {}
+    seasons_losses = {}
     season_games = {}
   
     get_seasons.each do |season|
       season_games[season] ||= 0
-      seasons_wins[season] ||= 0
+      seasons_losses[season] ||= 0
     end
 
     @all_games.each do |game|
         season = game.season
         if team_id.to_s == game.home_team_id
-            seasons_wins[season] += 1 if game.home_goals > game.away_goals
+            seasons_losses[season] += 1 if game.home_goals > game.away_goals
             season_games[season] += 1
         elsif team_id.to_s == game.away_team_id
-            seasons_wins[season] += 1 if game.away_goals > game.home_goals 
+            seasons_losses[season] += 1 if game.away_goals > game.home_goals 
             season_games[season] += 1
         end
       end
  
-    win_percentages = seasons_wins.map do |season, wins|
+    win_percentages = seasons_losses.map do |season, wins|
                         [season, wins.to_f / season_games[season]]
                       end.to_h
     win_percentages.max_by{ |_,  percentage| percentage}&.first
   end
 
   def get_worst_season(team_id)
-    seasons_wins = {}
+    seasons_losses = {}
     season_games = {}
   
     get_seasons.each do |season|
       season_games[season] ||= 0
-      seasons_wins[season] ||= 0
+      seasons_losses[season] ||= 0
     end
 
     @all_games.each do |game|
         season = game.season
         if team_id.to_s == game.home_team_id
-            seasons_wins[season] += 1 if game.home_goals > game.away_goals
+            seasons_losses[season] += 1 if game.home_goals < game.away_goals
             season_games[season] += 1
         elsif team_id.to_s == game.away_team_id
-            seasons_wins[season] += 1 if game.away_goals > game.home_goals 
+            seasons_losses[season] += 1 if game.away_goals < game.home_goals 
             season_games[season] += 1
         end
       end
  
-    win_percentages = seasons_wins.map do |season, wins|
-                        [season, wins.to_f / season_games[season]]
+    win_percentages = seasons_losses.map do |season, losses|
+                        [season, losses.to_f / season_games[season]]
                       end.to_h
     win_percentages.max_by{ |_,  percentage| percentage}&.first
   end
