@@ -378,7 +378,7 @@ class StatTracker
     wins = 0
     games = 0
     @all_games.count do |game|
-      if team_id.to_s == game.home_team_id
+        if team_id.to_s == game.home_team_id
           games += 1
           wins += 1 if game.home_goals > game.away_goals
         elsif team_id.to_s == game.away_team_id
@@ -413,7 +413,6 @@ class StatTracker
     worst_loss_margin = []
 
     @all_games.each do |game|
-      # binding.pry
       if team_id.to_s == game.home_team_id && game.home_goals < game.away_goals
         worst_loss_margin << game.away_goals - game.home_goals
       elsif team_id.to_s == game.away_team_id && game.away_goals < game.home_goals
@@ -421,6 +420,32 @@ class StatTracker
       end
     end
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
+  end
+  
+  def get_best_season(team_id)#this is dry because i used command + c
+    seasons_wins = {} # season: games
+    win_percentages = {}
+    games_played = get_games(team_id, :home) + get_games(team_id, :away)
+  
+    # 1. get all seasons
+    get_seasons.each do |season|
+      seasons_wins[season] = 0
+    end
 
+    # 2. number of wins for each season
+    @all_games.each do |game|
+        if team_id.to_s == game.home_team_id
+            seasons_wins[game.season] += 1 if game.home_goals > game.away_goals
+        elsif team_id.to_s == game.away_team_id
+            seasons_wins[game.season] += 1 if game.away_goals > game.home_goals 
+        end
+      end
+    # 3. number of total games played for each season
+    binding.pry
+    win_percentages = seasons_wins.map do |season, wins|
+                        wins.to_f / games_played.count
+                        puts "#{wins.to_f} / #{games_played.count}"
+                      end
+    .max_by{ |key, value| value}
   end
 end
