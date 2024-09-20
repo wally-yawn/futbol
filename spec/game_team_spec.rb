@@ -41,7 +41,6 @@ RSpec.describe 'GameTeam' do
       expect(@game_team1.powerPlayOpportunities).to eq(3)
       expect(@game_team1.powerPlayGoals).to eq(0)
       expect(@game_team1.faceOffWinPercentage).to eq(44.8)
-      expect(@game_team1.giveaways).to eq(17)
       expect(@game_team1.takeaways).to eq(7)
     end
   end

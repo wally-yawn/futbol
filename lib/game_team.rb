@@ -17,7 +17,6 @@ class GameTeam
     @powerPlayOpportunities = game_team[:powerPlayOpportunities].to_i
     @powerPlayGoals = game_team[:powerPlayGoals].to_i
     @faceOffWinPercentage = game_team[:faceOffWinPercentage].to_f
-    @giveaways = game_team[:giveaways].to_i
     @takeaways = game_team[:takeaways].to_i
   end
 end
