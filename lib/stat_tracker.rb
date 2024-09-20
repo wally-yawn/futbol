@@ -428,23 +428,23 @@ class StatTracker
     away_team_games = get_games(team_id, :away)
     opponents = []
     head_to_head_hash = {}
-    
+
     home_team_games.each do |game|
       if !opponents.include?(game.away_team_id)
         opponents << game.away_team_id
       end
     end
-
+ 
     away_team_games.each do |game|
-      if !opponents.include?(game.away_team_id)
-        opponents << game.away_team_id
+      if !opponents.include?(game.home_team_id)
+        opponents << game.home_team_id
       end
     end
     binding.pry
   end
 
   def favorite_opponent(team_id)
-    #call head_to_head to get the hash and then just get max
+    head_to_head(team_id)
   end
 
   def rival(team_id)
