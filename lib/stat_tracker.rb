@@ -171,12 +171,6 @@ class StatTracker
     games
   end
 
-  def get_games_for_season(season, games = @all_games)
-    games.select do |game|
-      game.season == season
-    end
-  end
-
   def get_avg_goals(games)
     goals = 0
     games.each do |game|
@@ -308,18 +302,16 @@ class StatTracker
       team_id = team.team_id
       goals = team_ratios[team_id][:goals]
       shots = team_ratios[team_id][:shots]
-      result[team.teamName] = shots > 0 ? (goals.to_f / shots).round(2) : 0
+      result[team.teamName] = shots > 0 ? (goals.to_f / shots) : 0
     end
   end
 
   def most_accurate_team(season = nil)
-    team_ratios = team_shot_goal_ratios(season)
-    team_shot_goal_ratios.max_by {|team_name, ratio| ratio }.first
+    team_shot_goal_ratios(season).max_by {|team_name, ratio| ratio }.first
   end
 
   def least_accurate_team(season = nil)
-    team_ratios = team_shot_goal_ratios(season)
-    team_shot_goal_ratios.min_by {|team_name, ratio| ratio }.first
+    team_shot_goal_ratios(season).reject { |team_name, ratio| ratio == 0 }.min_by { |team_name, ratio| ratio }.first
   end
 
   def team_tackle_total(season = nil)
@@ -346,7 +338,7 @@ class StatTracker
   end
 
   def fewest_tackles(season = nil)
-    team_tackle_total(season).min_by { |team_name, tackles| tackles}.first
+    team_tackle_total(season).reject { |team_name, tackles| tackles == 0 }.min_by { |team_name, tackles| tackles }.first
   end
 
   def team_info(team_id)
