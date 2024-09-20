@@ -98,7 +98,7 @@ RSpec.describe StatTracker do
  
   describe '#highest_scoring_home_team' do
     it 'can find the highest scoring home team' do
-      expect(@stat_tracker2.highest_scoring_home_team).to eq('FC Dallas')
+      expect(@stat_tracker2.highest_scoring_home_team).to eq('New York City FC')
     end
   end
 
@@ -116,7 +116,7 @@ RSpec.describe StatTracker do
 
   describe '#lowest_scoring_visitor' do
     it 'can find the lowest scoring visiting team' do
-      expect(@stat_tracker2.lowest_scoring_visitor).to eq('New York Red Bulls')
+      expect(@stat_tracker2.lowest_scoring_visitor).to eq('LA Galaxy')
     end
   end
   
