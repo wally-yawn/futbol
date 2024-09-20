@@ -474,5 +474,14 @@ class StatTracker
     win_percentages.min_by{ |_,  percentage| percentage}&.first
   end
 
+  def biggest_team_blowout(team_id)
+    team_games = get_games(team_id, :home) + get_games(team_id, :away)
+    biggest_blowout = 0
 
+    team_games.each do |game|
+      diff = (game.home_goals - game.away_goals).abs
+      biggest_blowout = diff if diff > biggest_blowout
+    end
+    biggest_blowout
+  end
 end
