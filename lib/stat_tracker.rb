@@ -489,8 +489,7 @@ class StatTracker
           current_season[:wins] += 1 if game.away_goals.to_i > game.home_goals.to_i
         end
     end
-  
-
+    
     seasons.each do |season, types|
      types.each do |type, stats|
         total_games = stats[:games_played]
