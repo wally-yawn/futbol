@@ -440,7 +440,39 @@ class StatTracker
         opponents << game.home_team_id
       end
     end
-    binding.pry
+  
+    opponents.each do |opponent|
+      wins = 0
+      losses = 0
+      games = 0
+      home_team_games.each do |game|
+        if game.away_team_id.to_s == opponent.to_s
+          games += 1
+          if game.home_goals  > game.away_goals
+            wins += 1
+          elsif game.home_goals < game.away_goals
+            losses += 1
+          end
+        end
+      end
+      away_team_games.each do |game|
+        if game.home_team_id.to_s == opponent.to_s
+          games += 1
+          if game.home_goals  > game.away_goals
+            losses += 1
+          elsif game.home_goals < game.away_goals
+            wins += 1
+          end
+        end
+      end
+
+      team_name = all_teams.find do |team|
+        opponent == team.team_id.to_s
+      end.teamName
+      win_percentage = wins.to_f / games.to_f
+      head_to_head_hash[team_name] = win_percentage
+    end
+    head_to_head_hash
   end
 
   def favorite_opponent(team_id)

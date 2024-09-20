@@ -370,7 +370,7 @@ RSpec.describe StatTracker do
 
   describe '#favorite_opponent' do
     it 'can determine a team\'s favorite opponent' do
-      expect(@stat_tracker3.favorite_opponent(3)).to eq(2)
+      expect(@stat_tracker3.favorite_opponent(5)).to eq(2)
     end
   end
 
