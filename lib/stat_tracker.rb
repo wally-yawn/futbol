@@ -41,8 +41,7 @@ class StatTracker
   def percentage_home_wins
     home_wins = @all_games.count {|game| game.home_goals > game.away_goals}
 
-    percentage = (home_wins.to_f / total_games)
-    percentage.round(2)
+    (home_wins.to_f / total_games).round(2)
   end
 
   def count_of_all_goals
@@ -57,15 +56,13 @@ class StatTracker
   def percentage_visitor_wins
     visitor_wins = @all_games.count {|game| game.away_goals > game.home_goals}
 
-    percentage = (visitor_wins.to_f / total_games)
-    percentage.round(2)
+    (visitor_wins.to_f / total_games).round(2)
   end
 
   def percentage_ties
     ties = @all_games.count {|game| game.away_goals == game.home_goals}
 
-    percentage = (ties.to_f / total_games)
-    percentage.round(2)
+    (ties.to_f / total_games).round(2)
   end
 
   def best_offense
@@ -123,15 +120,13 @@ class StatTracker
   end
 
   def average_goals_per_game
-    average = count_of_all_goals / @all_games.count.to_f
-    average.round(2)
+    (count_of_all_goals / @all_games.count.to_f).round(2)
   end
 
   def average_goals_by_season
-    seasons = get_seasons
     season_games = {}
 
-    seasons.each do |season|
+    get_seasons.each do |season|
       season_games[season] = games_by_season(season)
     end
 
@@ -144,10 +139,9 @@ class StatTracker
   end
 
   def games_by_season(season)
-    games = @all_games.select do |game|
-              game.season == season
-            end
-    games
+    @all_games.select do |game|
+      game.season == season
+    end
   end
 
   def get_seasons
@@ -177,19 +171,12 @@ class StatTracker
     games
   end
 
-  def get_games_for_season(season, games = @all_games)
-    games.select do |game|
-      game.season == season
-    end
-  end
-
   def get_avg_goals(games)
     goals = 0
     games.each do |game|
       goals += game.away_goals + game.home_goals
     end
-    avg = goals.to_f / games.count
-    avg.round(2)
+    (goals.to_f / games.count).round(2)
   end
 
   def get_scores(team_id, hoa = :both, season = :all)
@@ -238,12 +225,7 @@ class StatTracker
   end
 
   def highest_scoring_visitor
-    all_visitor_scores = {}
-    @all_teams.each do |team|
-      goals = get_scores(team.team_id, :away).sum
-      all_visitor_scores[team] = goals
-    end
-    all_visitor_scores.max_by{|team,goals| goals}.first.teamName
+    @all_teams.max_by { |team| get_scores(team.team_id, :away).sum }.teamName
   end
 
   def highest_scoring_home_team
@@ -320,18 +302,16 @@ class StatTracker
       team_id = team.team_id
       goals = team_ratios[team_id][:goals]
       shots = team_ratios[team_id][:shots]
-      result[team.teamName] = shots > 0 ? (goals.to_f / shots).round(2) : 0
+      result[team.teamName] = shots > 0 ? (goals.to_f / shots) : 0
     end
   end
 
   def most_accurate_team(season = nil)
-    team_ratios = team_shot_goal_ratios(season)
-    team_shot_goal_ratios.max_by {|team_name, ratio| ratio }.first
+    team_shot_goal_ratios(season).max_by {|team_name, ratio| ratio }.first
   end
 
   def least_accurate_team(season = nil)
-    team_ratios = team_shot_goal_ratios(season)
-    team_shot_goal_ratios.min_by {|team_name, ratio| ratio }.first
+    team_shot_goal_ratios(season).reject { |team_name, ratio| ratio == 0 }.min_by { |team_name, ratio| ratio }.first
   end
 
   def team_tackle_total(season = nil)
@@ -358,7 +338,7 @@ class StatTracker
   end
 
   def fewest_tackles(season = nil)
-    team_tackle_total(season).min_by { |team_name, tackles| tackles}.first
+    team_tackle_total(season).reject { |team_name, tackles| tackles == 0 }.min_by { |team_name, tackles| tackles }.first
   end
 
   def team_info(team_id)
@@ -422,30 +402,67 @@ class StatTracker
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
   end
   
-  def get_best_season(team_id)#this is dry because i used command + c
-    seasons_wins = {} # season: games
-    win_percentages = {}
-    games_played = get_games(team_id, :home) + get_games(team_id, :away)
+  def best_season(team_id)
+    seasons_wins = {}
+    season_games = {}
   
-    # 1. get all seasons
     get_seasons.each do |season|
-      seasons_wins[season] = 0
+      season_games[season] ||= 0
+      seasons_wins[season] ||= 0
     end
 
-    # 2. number of wins for each season
     @all_games.each do |game|
+        season = game.season
         if team_id.to_s == game.home_team_id
-            seasons_wins[game.season] += 1 if game.home_goals > game.away_goals
+            seasons_wins[season] += 1 if game.home_goals > game.away_goals
+            season_games[season] += 1
         elsif team_id.to_s == game.away_team_id
-            seasons_wins[game.season] += 1 if game.away_goals > game.home_goals 
+            seasons_wins[season] += 1 if game.away_goals > game.home_goals 
+            season_games[season] += 1
         end
       end
-    # 3. number of total games played for each season
+ 
     win_percentages = seasons_wins.map do |season, wins|
-                        wins.to_f / games_played.count
-                        puts "#{wins.to_f} / #{games_played.count}"
-                      end
-    .max_by{ |key, value| value}
+                        [season, wins.to_f / season_games[season]]
+                      end.to_h
+    win_percentages.max_by{ |_,  percentage| percentage}&.first
+  end
+
+  def worst_season(team_id)
+    seasons_wins = {}
+    season_games = {}
+  
+    get_seasons.each do |season|
+      season_games[season] ||= 0
+      seasons_wins[season] ||= 0
+    end
+
+    @all_games.each do |game|
+        season = game.season
+        if team_id.to_s == game.home_team_id
+            seasons_wins[season] += 1 if game.home_goals > game.away_goals
+            season_games[season] += 1
+        elsif team_id.to_s == game.away_team_id
+            seasons_wins[season] += 1 if game.away_goals > game.home_goals 
+            season_games[season] += 1
+        end
+      end
+ 
+    win_percentages = seasons_wins.map do |season, wins|
+                        [season, wins.to_f / season_games[season]]
+                      end.to_h
+    win_percentages.min_by{ |_,  percentage| percentage}&.first
+  end
+
+  def biggest_team_blowout(team_id)
+    team_games = get_games(team_id, :home) + get_games(team_id, :away)
+    biggest_blowout = 0
+
+    team_games.each do |game|
+      diff = (game.home_goals - game.away_goals).abs
+      biggest_blowout = diff if diff > biggest_blowout
+    end
+    biggest_blowout
   end
 
   def seasonal_summary(team_id)

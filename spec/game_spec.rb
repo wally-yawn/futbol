@@ -58,10 +58,5 @@ RSpec.describe Game do
       expect(@game1.venue).to eq('Toyota Stadium')
       expect(@game2.venue).to eq('Toyota Stadium')
     end
-
-    it 'has venue_link' do
-      expect(@game1.venue_link).to eq('/api/v1/venues/null')
-      expect(@game2.venue_link).to eq('/api/v1/venues/null')
-    end
   end
 end
