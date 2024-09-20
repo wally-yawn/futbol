@@ -462,7 +462,8 @@ class StatTracker
       diff = (game.home_goals - game.away_goals).abs
       biggest_blowout = diff if diff > biggest_blowout
     end
-    biggest_blowout  end
+    biggest_blowout  
+  end
 
   
     def head_to_head(team_id)
@@ -482,8 +483,6 @@ class StatTracker
         opponents << game.home_team_id
       end
     end
-  
-    # require 'pry'; binding.pry
 
     opponents.each do |opponent|
       wins = 0
