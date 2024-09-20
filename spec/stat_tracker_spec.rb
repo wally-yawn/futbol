@@ -403,7 +403,7 @@ RSpec.describe StatTracker do
 
   describe '#head_to_head' do
     it 'can return a hash of opponents and win percentages' do
-      expect(true).to eq(false)
+      expect(@stat_tracker3.head_to_head(5)).to eq({"FC Dallas"=>0.0, "Houston Dynamo"=>1.0})
     end
   end
 end 
