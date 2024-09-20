@@ -472,7 +472,8 @@ class StatTracker
     end
     biggest_blowout  end
 
-  def head_to_head(team_id)
+  
+    def head_to_head(team_id)
     home_team_games = get_games(team_id, :home)
     away_team_games = get_games(team_id, :away)
     opponents = []
@@ -525,9 +526,12 @@ class StatTracker
   end
 
   def favorite_opponent(team_id)
-    head_to_head(team_id)
+    head_to_head_percentages = head_to_head(team_id)
+    head_to_head_percentages.max_by {|opponent, win_percentage| win_percentage}[0]
   end
 
   def rival(team_id)
+    head_to_head_percentages = head_to_head(team_id)
+    head_to_head_percentages.min_by {|opponent, win_percentage| win_percentage}[0]
   end
 end
