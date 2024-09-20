@@ -427,11 +427,12 @@ class StatTracker
     win_percentages = {}
     games_played = get_games(team_id, :home) + get_games(team_id, :away)
   
+    # 1. get all seasons
     get_seasons.each do |season|
-      seasons_games[season] = 0
+      seasons_wins[season] = 0
     end
 
-     
+    # 2. number of wins for each season
     @all_games.each do |game|
         if team_id.to_s == game.home_team_id
             seasons_wins[game.season] += 1 if game.home_goals > game.away_goals
@@ -439,17 +440,12 @@ class StatTracker
             seasons_wins[game.season] += 1 if game.away_goals > game.home_goals 
         end
       end
-      seasons_wins.each do |season, wins|
-        wins / get_games_for_season(season, games_played)
-      end
-      # seasons_games.max_by{|key,value| value}
-  end
-end
-
-
-
-def get_games_for_season(season, games = @all_games)
-  games.select do |game|
-    game.season == season
+    # 3. number of total games played for each season
+    binding.pry
+    win_percentages = seasons_wins.map do |season, wins|
+                        wins.to_f / games_played.count
+                        puts "#{wins.to_f} / #{games_played.count}"
+                      end
+    .max_by{ |key, value| value}
   end
 end
