@@ -29,10 +29,12 @@ Create a section in your README called “Contributors”. List each group membe
 The name of and links (if applicable) to any tools you used for retro
  - [Easy Retro](https://easyretro.io/publicboard/vZXr1QSxjIbe3BJCKn3McsvfRCT2/a3d9ae2d-1bc3-4705-9c80-315f4f0dfb17)
 Top 3 things that went well during your project
+
  1. Team unitilized good communication skills and a variety of tools to share information
  2. Grouping together for peer review and assistance while developing methods and tools for the project
  3. Good at adapting to each others preferred working styles and not enforcing a work style
 Top 3 things your team would do differently next time
+
  1. Merging conflicts caused headache, especially when it came to merging multiple merge requests at the same time.
  2. Pull requests were chaotic at the beginning, no real guidelines were set on how to revie or what to comment on.
  3. Ambiguity in tasking out tasks via trello, the card names were a little vague at first causeing folks to seperately create the same method
