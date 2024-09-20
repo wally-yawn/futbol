@@ -15,6 +15,5 @@ class GameTeam
     @shots = game_team[:shots].to_i
     @tackles = game_team[:tackles].to_i
     @powerPlayOpportunities = game_team[:powerPlayOpportunities].to_i
-    @powerPlayGoals = game_team[:powerPlayGoals].to_i
   end
 end
