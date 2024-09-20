@@ -12,6 +12,5 @@ class Game
     @away_goals = source[:away_goals].to_i
     @home_goals = source[:home_goals].to_i
     @venue = source[:venue]
-    #@venue_link = source[:venue_link]
   end
 end
