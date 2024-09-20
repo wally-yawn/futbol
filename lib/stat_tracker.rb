@@ -423,24 +423,28 @@ class StatTracker
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
   end
 
-  def get_win_loss_percentage_against_opponent(team_id, win_or_lose)
-    opponents = {}
-    home_games_with_team = all_games.find_all do |game|
-      game.home_team_id.to_s  == team_id.to_s
-    end
-    away_games_with_team = all_games.find_all do |game|
-      game.away_team_id.to_s  == team_id.to_s
-    end
-    team_games = home_games_with_team + away_games_with_team
-    team_games.each do |game|
+  def head_to_head(team_id)
+    home_team_games = get_games(team_id, :home)
+    away_team_games = get_games(team_id, :away)
+    opponents = []
+    head_to_head_hash = {}
+    
+    home_team_games.each do |game|
+      if !opponents.include?(game.away_team_id)
+        opponents << game.away_team_id
+      end
     end
 
+    away_team_games.each do |game|
+      if !opponents.include?(game.away_team_id)
+        opponents << game.away_team_id
+      end
+    end
     binding.pry
-    1.0
   end
 
   def favorite_opponent(team_id)
-    get_win_loss_percentage_against_opponent(team_id,:win)
+    #call head_to_head to get the hash and then just get max
   end
 
   def rival(team_id)

@@ -7,6 +7,7 @@ RSpec.describe StatTracker do
     team_path_2 = './data/teams_test.csv'
     game_teams_path = './data/game_team_test.csv'
     game_path_2 = './data/games_test_2.csv'
+    game_path_3 = './data/games_test_3.csv'
 
     locations = {
       games: game_path,
@@ -19,9 +20,16 @@ RSpec.describe StatTracker do
       teams: team_path_2,
       game_teams: game_teams_path
     }
+
+    locations3 = {
+      games: game_path_3,
+      teams: team_path_2,
+      game_teams: game_teams_path
+    }
     @stat_tracker = StatTracker.new
     @stat_tracker1 = StatTracker.from_csv(locations)
     @stat_tracker2 = StatTracker.from_csv(locations2)
+    @stat_tracker3 = StatTracker.from_csv(locations3)
   end
 
   describe '#initialize' do
@@ -362,7 +370,7 @@ RSpec.describe StatTracker do
 
   describe '#favorite_opponent' do
     it 'can determine a team\'s favorite opponent' do
-      expect(@stat_tracker1.favorite_opponent(3)).to eq(2.0)
+      expect(@stat_tracker3.favorite_opponent(3)).to eq(2.0)
     end
   end
 
