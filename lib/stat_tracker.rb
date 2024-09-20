@@ -422,7 +422,7 @@ class StatTracker
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
   end
   
-  def get_best_season(team_id)
+  def best_season(team_id)
     seasons_wins = {}
     season_games = {}
   
@@ -448,7 +448,7 @@ class StatTracker
     win_percentages.max_by{ |_,  percentage| percentage}&.first
   end
 
-  def get_worst_season(team_id)
+  def worst_season(team_id)
     seasons_wins = {}
     season_games = {}
   
