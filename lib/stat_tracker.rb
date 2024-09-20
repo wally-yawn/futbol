@@ -224,35 +224,28 @@ class StatTracker
     @all_games.length
   end
 
+  def scoring_averages(hoa, high_or_low)
+    @all_teams.send(high_or_low) do |team|
+      scores = get_scores(team.team_id, hoa).sum
+      away_games_count = get_games(team.team_id.to_i, hoa).count
+      scores.to_f / away_games_count.to_f
+    end.teamName
+  end
+
   def highest_scoring_visitor
-    @all_teams.max_by { |team| get_scores(team.team_id, :away).sum }.teamName
+    scoring_averages(:away, :max_by)
   end
 
   def highest_scoring_home_team
-    all_home_scores = {}
-    @all_teams.each do |team|
-      goals = get_scores(team.team_id, :home).sum
-      all_home_scores[team] = goals
-    end
-    all_home_scores.max_by{|team,goals| goals}.first.teamName
+    scoring_averages(:home, :max_by)
   end
 
   def lowest_scoring_visitor
-    all_visitor_scores = {}
-    @all_teams.each do |team|
-      goals = get_scores(team.team_id, :away).sum
-      all_visitor_scores[team] = goals
-    end
-    all_visitor_scores.min_by{|team,goals| goals}.first.teamName
+    scoring_averages(:away, :min_by)
   end
 
   def lowest_scoring_home_team
-    all_home_scores = {}
-    @all_teams.each do |team|
-      goals = get_scores(team.team_id, :home).sum
-      all_home_scores[team] = goals
-    end
-    all_home_scores.min_by{|team,goals| goals}.first.teamName
+    scoring_averages(:home, :min_by)
   end
 
   def coach_win_percentages(season)
@@ -462,7 +455,78 @@ class StatTracker
       diff = (game.home_goals - game.away_goals).abs
       biggest_blowout = diff if diff > biggest_blowout
     end
-    biggest_blowout
+    biggest_blowout  
+  end
+
+  
+    def head_to_head(team_id)
+    home_team_games = get_games(team_id.to_i, :home)
+    away_team_games = get_games(team_id.to_i, :away)
+    opponents = []
+    head_to_head_hash = {}
+
+    home_team_games.each do |game|
+      if !opponents.include?(game.away_team_id)
+        opponents << game.away_team_id
+      end
+    end
+ 
+    away_team_games.each do |game|
+      if !opponents.include?(game.home_team_id)
+        opponents << game.home_team_id
+      end
+    end
+
+    opponents.each do |opponent|
+      wins = 0
+      losses = 0
+      games = 0
+      home_team_games.each do |game|
+        if game.away_team_id.to_s == opponent.to_s
+          games += 1
+          if game.home_goals  > game.away_goals
+            wins += 1
+          elsif game.home_goals < game.away_goals
+            losses += 1
+          end
+        end
+      end
+      away_team_games.each do |game|
+        if game.home_team_id.to_s == opponent.to_s
+          games += 1
+          if game.home_goals  > game.away_goals
+            losses += 1
+          elsif game.home_goals < game.away_goals
+            wins += 1
+          end
+        end
+      end
+
+      team_name = all_teams.find do |team|
+        opponent == team.team_id.to_s
+      end.teamName
+      win_percentage = wins.to_f / games.to_f
+      head_to_head_hash[team_name] = win_percentage
+    end
+    head_to_head_hash
+  end
+
+  def favorite_opponent(team_id)
+    head_to_head_percentages = head_to_head(team_id)
+    if head_to_head_percentages.length > 0
+      head_to_head_percentages.max_by {|opponent, win_percentage| win_percentage}[0]
+    else
+      "No favorite"
+    end
+  end
+
+  def rival(team_id)
+    head_to_head_percentages = head_to_head(team_id)
+    if head_to_head_percentages.length > 0
+      head_to_head_percentages.min_by {|opponent, win_percentage| win_percentage}[0]
+    else
+      "No rival"
+    end
   end
 
   def seasonal_summary(team_id)
