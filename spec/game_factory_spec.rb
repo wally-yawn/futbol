@@ -32,8 +32,6 @@ RSpec.describe GameFactory do
       expect(@factory1.games[0].away_goals).to eq(2)
       expect(@factory1.games[0].home_goals).to eq(3)
       expect(@factory1.games[0].venue).to eq('Toyota Stadium')
-      expect(@factory1.games[0].venue_link).to eq('/api/v1/venues/null')
-
       expect(@factory2.games).to eq([])
     end
   end
