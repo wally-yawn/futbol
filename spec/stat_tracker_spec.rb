@@ -368,6 +368,27 @@ RSpec.describe StatTracker do
     end
   end
 
+  describe '#best season' do 
+    it 'can show the worst season for a team' do
+      expect(@stat_tracker2.best_season(6)).to eq('20122013')
+      expect(@stat_tracker2.best_season(6)).to be_a(String)
+    end
+  end
+
+  describe '#worst season' do
+    it 'can show the worst season' do
+      expect(@stat_tracker2.worst_season(16)).to eq('20132014')
+      expect(@stat_tracker2.worst_season(6)).to be_a(String)
+    end
+  end
+
+  describe '#biggest_team_blowout' do
+    it 'can find the biggest blowout' do
+    expect(@stat_tracker1.biggest_team_blowout(6)).to eq 3
+    expect(@stat_tracker1.biggest_team_blowout(3)).to eq 2
+    end
+  end
+
   describe '#favorite_opponent' do
     it 'can determine a team\'s favorite opponent' do
       expect(@stat_tracker3.favorite_opponent(5)).to eq(2)
