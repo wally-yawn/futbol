@@ -182,8 +182,7 @@ class StatTracker
     games.each do |game|
       goals += game.away_goals + game.home_goals
     end
-    avg = goals.to_f / games.count
-    avg.round(2)
+    (goals.to_f / games.count).round(2)
   end
 
   def get_scores(team_id, hoa = :both, season = :all)
