@@ -396,18 +396,25 @@ RSpec.describe StatTracker do
   describe '#favorite_opponent' do
     it 'can determine a team\'s favorite opponent' do
       expect(@stat_tracker3.favorite_opponent(5)).to eq('Houston Dynamo')
+      expect(@stat_tracker3.favorite_opponent('5')).to eq('Houston Dynamo')
+      expect(@stat_tracker3.favorite_opponent(53)).to eq('No favorite')
+      expect(@stat_tracker3.favorite_opponent('53')).to eq('No favorite')
     end
   end
 
   describe '#rival' do
     it 'can determine a team\'s rival' do
       expect(@stat_tracker3.rival(5)).to eq('FC Dallas')
+      expect(@stat_tracker3.rival('5')).to eq('FC Dallas')
+      expect(@stat_tracker3.rival(53)).to eq('No rival')
+      expect(@stat_tracker3.rival('53')).to eq('No rival')
     end
   end
 
   describe '#head_to_head' do
     it 'can return a hash of opponents and win percentages' do
       expect(@stat_tracker3.head_to_head(5)).to eq({"FC Dallas"=>0.25, "Houston Dynamo"=>1.0})
+      expect(@stat_tracker3.head_to_head('5')).to eq({"FC Dallas"=>0.25, "Houston Dynamo"=>1.0})
     end
   end
 end 

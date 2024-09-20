@@ -466,8 +466,8 @@ class StatTracker
 
   
     def head_to_head(team_id)
-    home_team_games = get_games(team_id, :home)
-    away_team_games = get_games(team_id, :away)
+    home_team_games = get_games(team_id.to_i, :home)
+    away_team_games = get_games(team_id.to_i, :away)
     opponents = []
     head_to_head_hash = {}
 
@@ -483,6 +483,8 @@ class StatTracker
       end
     end
   
+    # require 'pry'; binding.pry
+
     opponents.each do |opponent|
       wins = 0
       losses = 0
@@ -519,11 +521,19 @@ class StatTracker
 
   def favorite_opponent(team_id)
     head_to_head_percentages = head_to_head(team_id)
-    head_to_head_percentages.max_by {|opponent, win_percentage| win_percentage}[0]
+    if head_to_head_percentages.length > 0
+      head_to_head_percentages.max_by {|opponent, win_percentage| win_percentage}[0]
+    else
+      "No favorite"
+    end
   end
 
   def rival(team_id)
     head_to_head_percentages = head_to_head(team_id)
-    head_to_head_percentages.min_by {|opponent, win_percentage| win_percentage}[0]
+    if head_to_head_percentages.length > 0
+      head_to_head_percentages.min_by {|opponent, win_percentage| win_percentage}[0]
+    else
+      "No rival"
+    end
   end
 end
