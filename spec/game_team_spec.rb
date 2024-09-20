@@ -38,7 +38,6 @@ RSpec.describe 'GameTeam' do
       expect(@game_team1.goals).to eq(2)
       expect(@game_team1.shots).to eq(8)
       expect(@game_team1.tackles).to eq(44)
-      expect(@game_team1.pim).to eq(8)
       expect(@game_team1.powerPlayOpportunities).to eq(3)
       expect(@game_team1.powerPlayGoals).to eq(0)
       expect(@game_team1.faceOffWinPercentage).to eq(44.8)
