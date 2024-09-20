@@ -423,23 +423,33 @@ class StatTracker
   end
   
   def get_best_season(team_id)#this is dry because i used command + c
-    #best_season = '' # will return this
-    seasons_games = {} # season: games
-
-    #create a key with value 0 for each season
+    seasons_wins = {} # season: games
+    win_percentages = {}
+    games_played = get_games(team_id, :home) + get_games(team_id, :away)
+  
     get_seasons.each do |season|
-      seasons_games[season] = 0 # so we can +=
-      # require 'pry';binding.pry
+      seasons_games[season] = 0
     end
 
-      # how many games are there for this team_id
-      @all_games.each do |game|
-          if team_id.to_s == game.home_team_id
-            seasons_games[game.season] += 1 if game.home_goals > game.away_goals
-          elsif team_id.to_s == game.away_team_id
-            seasons_games[game.season] += 1 if game.away_goals > game.home_goals 
-          end
+     
+    @all_games.each do |game|
+        if team_id.to_s == game.home_team_id
+            seasons_wins[game.season] += 1 if game.home_goals > game.away_goals
+        elsif team_id.to_s == game.away_team_id
+            seasons_wins[game.season] += 1 if game.away_goals > game.home_goals 
         end
-      seasons_games.max_by{|key,value| value}
+      end
+      seasons_wins.each do |season, wins|
+        wins / get_games_for_season(season, games_played)
+      end
+      # seasons_games.max_by{|key,value| value}
+  end
+end
+
+
+
+def get_games_for_season(season, games = @all_games)
+  games.select do |game|
+    game.season == season
   end
 end
