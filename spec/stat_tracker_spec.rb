@@ -311,11 +311,11 @@ RSpec.describe StatTracker do
   describe '#team_info' do
     it 'can generate a hash of team info' do
       expected = {
-        :team_id => '9',
-        :franchiseid => '30',
-        :team_name => 'New York City FC',
-        :abbreviation => 'NYC',
-        :link => '/api/v1/teams/9'
+        'team_id' => '9',
+        'franchise_id' => '30',
+        'team_name' => 'New York City FC',
+        'abbreviation' => 'NYC',
+        'link' => '/api/v1/teams/9'
       }
       expect(@stat_tracker1.team_info(9)).to eq(expected)
       expect(@stat_tracker1.team_info('9')).to eq(expected)
@@ -329,7 +329,6 @@ RSpec.describe StatTracker do
       expect(@stat_tracker1.average_win_percentage(9)).to eq(0.6) #has a tie 3wins 5 games
     end
   end
-
 
   describe '#fewest_goals_scored' do
     it 'can return the fewest amount of goals scored if there is only one' do
@@ -352,7 +351,6 @@ RSpec.describe StatTracker do
       expect(@stat_tracker1.most_goals_scored('3')).to eq(2)
     end
   end
-
 
   describe '#worst loss do' do
     it 'records biggest losses' do
