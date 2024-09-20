@@ -41,8 +41,7 @@ class StatTracker
   def percentage_home_wins
     home_wins = @all_games.count {|game| game.home_goals > game.away_goals}
 
-    percentage = (home_wins.to_f / total_games)
-    percentage.round(2)
+    (home_wins.to_f / total_games).round(2)
   end
 
   def count_of_all_goals
@@ -57,15 +56,13 @@ class StatTracker
   def percentage_visitor_wins
     visitor_wins = @all_games.count {|game| game.away_goals > game.home_goals}
 
-    percentage = (visitor_wins.to_f / total_games)
-    percentage.round(2)
+    (visitor_wins.to_f / total_games).round(2)
   end
 
   def percentage_ties
     ties = @all_games.count {|game| game.away_goals == game.home_goals}
 
-    percentage = (ties.to_f / total_games)
-    percentage.round(2)
+    (ties.to_f / total_games).round(2)
   end
 
   def best_offense
@@ -123,15 +120,13 @@ class StatTracker
   end
 
   def average_goals_per_game
-    average = count_of_all_goals / @all_games.count.to_f
-    average.round(2)
+    (count_of_all_goals / @all_games.count.to_f).round(2)
   end
 
   def average_goals_by_season
-    seasons = get_seasons
     season_games = {}
 
-    seasons.each do |season|
+    get_seasons.each do |season|
       season_games[season] = games_by_season(season)
     end
 
@@ -144,10 +139,9 @@ class StatTracker
   end
 
   def games_by_season(season)
-    games = @all_games.select do |game|
-              game.season == season
-            end
-    games
+    @all_games.select do |game|
+      game.season == season
+    end
   end
 
   def get_seasons
@@ -188,8 +182,7 @@ class StatTracker
     games.each do |game|
       goals += game.away_goals + game.home_goals
     end
-    avg = goals.to_f / games.count
-    avg.round(2)
+    (goals.to_f / games.count).round(2)
   end
 
   def get_scores(team_id, hoa = :both, season = :all)
@@ -238,12 +231,7 @@ class StatTracker
   end
 
   def highest_scoring_visitor
-    all_visitor_scores = {}
-    @all_teams.each do |team|
-      goals = get_scores(team.team_id, :away).sum
-      all_visitor_scores[team] = goals
-    end
-    all_visitor_scores.max_by{|team,goals| goals}.first.teamName
+    @all_teams.max_by { |team| get_scores(team.team_id, :away).sum }.teamName
   end
 
   def highest_scoring_home_team

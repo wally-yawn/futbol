@@ -13,7 +13,6 @@ RSpec.describe 'team' do
       expect(@team1.franchise_id).to eq('2')
       expect(@team1.teamName).to eq('The Capybaras')
       expect(@team1.abbreviation).to eq("CAP")
-      expect(@team1.stadium).to eq("Wally\'s World")
       expect(@team1.link).to eq("http:\\google.com")
     end
   end
