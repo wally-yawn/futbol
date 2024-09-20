@@ -423,9 +423,26 @@ class StatTracker
     worst_loss_margin.max == nil ?  0 : worst_loss_margin.max
   end
 
-  def favorite_opponent
+  def get_win_loss_percentage_against_opponent(team_id, win_or_lose)
+    opponents = {}
+    home_games_with_team = all_games.find_all do |game|
+      game.home_team_id.to_s  == team_id.to_s
+    end
+    away_games_with_team = all_games.find_all do |game|
+      game.away_team_id.to_s  == team_id.to_s
+    end
+    team_games = home_games_with_team + away_games_with_team
+    team_games.each do |game|
+    end
+
+    binding.pry
+    1.0
   end
 
-  def rival
+  def favorite_opponent(team_id)
+    get_win_loss_percentage_against_opponent(team_id,:win)
+  end
+
+  def rival(team_id)
   end
 end
