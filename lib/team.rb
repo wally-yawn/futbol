@@ -6,7 +6,6 @@ class Team
     @franchise_id = source[:franchiseId]
     @teamName = source[:teamName]
     @abbreviation = source[:abbreviation]
-    @stadium = source[:Stadium]
     @link = source[:link]
   end
 end
