@@ -359,4 +359,10 @@ RSpec.describe StatTracker do
       expect(@stat_tracker1.worst_loss(6)).to_not eq(nil)
     end
   end
+
+  describe '#best season' do 
+    it 'can show the best season for a team' do
+      expect(@stat_tracker2.get_best_season).to eq
+    end
+  end
 end
