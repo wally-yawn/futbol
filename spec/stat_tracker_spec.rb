@@ -7,7 +7,6 @@ RSpec.describe StatTracker do
     team_path_2 = './data/teams_test.csv'
     game_teams_path = './data/game_team_test.csv'
     game_path_2 = './data/games_test_2.csv'
-
     locations = {
       games: game_path,
       teams: team_path,
@@ -357,6 +356,30 @@ RSpec.describe StatTracker do
       expect(@stat_tracker1.worst_loss(3)).to eq(2)
       expect(@stat_tracker1.worst_loss(6)).to eq(0)
       expect(@stat_tracker1.worst_loss(6)).to_not eq(nil)
+    end
+  end
+
+  describe '#seasonal_summary' do
+    it 'shows a hash that points to win%, total_goals, average_goals' do
+
+      expect_hash = {
+        "20122013"=> {
+          :regular_season=>{
+            :win_percentage=>0.0, 
+            :total_goals_scored=>0, 
+            :total_goals_against=>0, 
+            :average_goals_scored=>0.0, 
+            :average_goals_against=>0.0
+          },
+            :postseason=>{
+              :win_percentage=>0.0, 
+              :total_goals_scored=>8, 
+              :total_goals_against=>14, 
+              :average_goals_scored=>0.25, 
+              :average_goals_against=>0.44}
+              }
+            }
+      expect(@stat_tracker1.seasonal_summary("3")).to eq(expect_hash)
     end
   end
 end
