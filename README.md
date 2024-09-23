@@ -23,7 +23,7 @@ Create a section in your README called “Contributors”. List each group membe
  - Eric DeShetler [LinkedIn](https://www.linkedin.com/in/ericdeshetler/), [GitHub](https://github.com/ejdesh)
  - Montana Pfeifer [LinkedIn](https://www.linkedin.com/in/montana-pfeifer/), [GitHub](https://github.com/Montana-Pfeifer)
  - Jeremiah Ross [LinkedIn](https://www.linkedin.com/in/jeremiahross/), [GitHub](https://github.com/Crosswolfv1)
- - Paul Knapp [LinkedIn](https://media1.tenor.com/m/RfJzepsDdmYAAAAC/rat-spinning.gif), [GitHub](https://github.com/Paul-Knapp)
+ - Paul Knapp [LinkedIn](https://www.linkedin.com/in/paul-knapp-39119632b/), [GitHub](https://github.com/Paul-Knapp)
 
 # Retro
 The name of and links (if applicable) to any tools you used for retro
