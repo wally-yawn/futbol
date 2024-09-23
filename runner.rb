@@ -4,9 +4,9 @@ require './lib/game_team_factory'
 require './lib/game_factory'
 require './lib/teams_factory'
 
-game_path = './data/games_test.csv'
+game_path = './data/games.csv'
 team_path = './data/teams.csv'
-game_teams_path = './data/game_team_test.csv'
+game_teams_path = './data/game_teams.csv'
 
 locations = {
   games: game_path,
